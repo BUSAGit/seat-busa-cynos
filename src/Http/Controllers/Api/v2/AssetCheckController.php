@@ -6,7 +6,9 @@ use Seat\Api\Http\Traits\Filterable;
 use Illuminate\Http\Resources\Json\Resource;
 
 use GuzzleHttp\Client;
+use Seat\Web\Models\User;
 use Seat\Eveapi\Models\Character\CharacterInfo;
+use Seat\Eveapi\Models\Assets\CharacterAsset;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Illuminate\Http\Request;
 
@@ -15,6 +17,13 @@ class AssetCheckController extends ApiController
 
     use Filterable;
 
+    private $desto;
+
+    public function __construct($desto = null)
+    {
+        $this->desto = $desto;
+    }
+
     public function get_characters_in_corp()
     {
         return CorporationInfo::where('corporation_id', 2014367342)
@@ -22,7 +31,8 @@ class AssetCheckController extends ApiController
             ->characters
             ->map(function ($character) {
                 return [
-                    'main_character_id' => $character->main_character_id
+                    'character_id' => $character->character_id,
+                    'name' => $character->name,
                 ];
             });
     }
@@ -36,32 +46,36 @@ class AssetCheckController extends ApiController
     public function index(Request $request)
     {
         $desto = $request->desto;
-        // explode the lookingForGroup string into an array
         $lookingForGroup = explode(',', $request->lookingForGroup);
-
-        $charactersInCorp = $this->get_characters_in_corp();
-
     
-        $result = CharacterInfo::whereIn('character_id', $charactersInCorp->pluck('main_character_id')->toArray())
-            ->get()
-            ->all_characters
-            ->map(function ($character) use ($charactersInCorp) {
-                $assets = $character->assets;
-                
-                $assets = $assets->filter(function ($asset) use ($lookingForGroup) {
-                    if($asset->solar_system->name == $desto){
-                        if(in_array($asset->type->group->groupName, $lookingForGroup)){
-                            return [
-                                'character_name' => $character->name,
-                                'asset_name' => $asset->type->typeName,
-                            ];
-                        }
-                    }
+        $charactersInCorp = $this->get_characters_in_corp()->pluck('character_id')->toArray();
+    
+        $characters = CharacterInfo::with([
+            'user',
+            'assets' => function ($query) use ($lookingForGroup, $desto) {
+                $query->whereHas('solar_system', function ($query) use ($desto) {
+                    $query->where('name', $desto);
+                })->orWhereHas('type.group', function ($query) use ($lookingForGroup) {
+                    $query->whereIn('groupName', $lookingForGroup);
                 });
-            })
-            ->filter(); // Remove null values from the collection
-
-        return $result;
+            },
+            'assets.solar_system',
+            'assets.type.group'
+        ])
+        ->whereIn('character_id', $charactersInCorp)
+        ->get()
+        ->map(function ($character) {
+            return [
+                'character_id' => $character->character_id,
+                'name' => $character->name,
+                'belongs_to' => $character->user->name,
+                'hasAssetsWereLookingFor' => !$character->assets->isEmpty(),
+            ];
+        })
+        ->filter()
+        ->groupBy('belongs_to');
+        
+        return $characters;
     }
 
 }
