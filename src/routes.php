@@ -11,6 +11,10 @@ Route::group([
             Route::get('/{desto}/{maxJumps}')->uses('CynosController@index');
             Route::get('/{desto}')->uses('CynosController@index');
         });
+        
+        Route::group(['prefix' => 'assetsCheck'], function () {
+            Route::get('/{desto}/{lookingForGroup}')->uses('AssetCheckController@index');
+        });
     });
 
 });
