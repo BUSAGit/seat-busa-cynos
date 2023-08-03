@@ -6,7 +6,7 @@ use Seat\Services\AbstractSeatPlugin;
 use Illuminate\Console\Scheduling\Schedule;
 use Helious\SeatBeacons\Console\CheckBeaconFuel;
 
-class BeaconsServiceProvider extends AbstractSeatPlugin
+class ApiServiceProvider extends AbstractSeatPlugin
 {
 
     /**
