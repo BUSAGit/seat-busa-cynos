@@ -5,9 +5,11 @@ Route::group([
     'prefix' => 'api',
     'middleware' => ['api.request', 'api.auth'],
 ], function () {
-
-    Route::get('/cynos', [
-        'uses' => 'CynosController@index',
-    ]);
+    
+    Route::group(['namespace' => 'v2', 'prefix' => 'v2'], function () {
+        Route::group(['prefix' => 'cynos'], function () {
+            Route::post('/')->uses('CynosController@index');
+        });
+    });
 
 });
