@@ -4,6 +4,8 @@ namespace Helious\SeatBusaCynos;
 
 use Seat\Services\AbstractSeatPlugin;
 
+use Helious\SeatBusaCynos\Http\Middleware\ApiToken;
+
 class ApiServiceProvider extends AbstractSeatPlugin
 {
 
@@ -25,6 +27,7 @@ class ApiServiceProvider extends AbstractSeatPlugin
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->add_middleware($this->app['router']);
     }
 
     /**
@@ -35,6 +38,16 @@ class ApiServiceProvider extends AbstractSeatPlugin
     protected function getRouteFile()
     {
         return __DIR__.'/routes.php';
+    }
+
+    /**
+     * Include the middleware needed
+     *
+     * @param $router
+     */
+    public function add_middleware($router)
+    {
+        $router->middleware('api.auth', ApiToken::class);
     }
 
     
