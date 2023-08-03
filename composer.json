@@ -1,0 +1,31 @@
+{
+    "name": "helious/seat-busa-cynos",
+    "type": "library",
+    "keywords": [
+        "helious",
+        "seat-busa-cynos"
+    ],
+    "authors": [
+        {
+            "name": "Helious",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Helious\\SeatBusaCynos\\": "src/"
+        }
+    },
+    "require": {
+        "laravel/framework": "^6.0",
+        "eveseat/web": "^4.0",
+        "eveseat/eveapi": "^4.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Helious\\SeatBusaCynos\\ApiServiceProvider"
+            ]
+        }
+    }
+}
