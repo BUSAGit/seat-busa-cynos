@@ -1,6 +1,6 @@
 <?php
 
-namespace Helious\SeatBeacons\Http\Controllers\Api\v2;
+namespace Helious\SeatBeacons\Http\Controllers;
 
 class CynosController extends Controller
 {
