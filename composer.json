@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "busa-git\\SeatBusaCynos\\": "src/"
+            "Helious\\SeatBusaCynos\\": "src/"
         }
     },
     "require": {
@@ -24,7 +24,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "busa-git\\SeatBusaCynos\\ApiServiceProvider"
+                "Helious\\SeatBusaCynos\\ApiServiceProvider"
             ]
         }
     }
