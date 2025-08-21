@@ -1,5 +1,5 @@
 {
-    "name": "helious/seat-busa-cynos",
+    "name": "busa-git/seat-busa-cynos",
     "type": "library",
     "keywords": [
         "helious",
@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Helious\\SeatBusaCynos\\": "src/"
+            "busa-git\\SeatBusaCynos\\": "src/"
         }
     },
     "require": {
@@ -24,7 +24,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Helious\\SeatBusaCynos\\ApiServiceProvider"
+                "busa-git\\SeatBusaCynos\\ApiServiceProvider"
             ]
         }
     }
